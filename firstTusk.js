@@ -28,7 +28,7 @@ let appData = {
          let a = prompt("Введите обязательную статью расходов в этом месяце", ""),
             b = prompt("Во сколько обойдется?", "");
          
-         if (typeof(a) === 'string' && a != null && b != null
+         if (typeof(a) === 'string' && a != null && b != null && typeof(b) === "string"
             && a.length < 50 && b.length < 50 && a != "" && b != "") {
       
             appData.expenses[a] = b;
@@ -60,17 +60,32 @@ let appData = {
          console.log("Произошла ошибка");
       };
    },
-   userBudgetPerDay: function() {
-   let  userBudgetPerDay = (this.budget + appData.monthIncome) / 30;
-   },
    chooseIncome: function() {
-      let questionIncome = prompt("Есть дополнительные возможности заработка? (Перечислите их через запятую)", "");
-      appData.income = questionIncome.split(", ");
-      appData.income.push(prompt('Может что-нибудь ещё?', ''));
+      let userInput;
+
+while (!userInput || userInput.trim() === "" || !isNaN(userInput)) {
+   userInput = prompt("Есть дополнительные возможности заработка? (Перечислите их через запятую)", "");
+
+   if (!userInput || userInput.trim() === "" || !isNaN(userInput)) {
+      alert("Некорректный ввод. Попробуйте снова.");
+   }
 }
+
+   appData.income = userInput.split(",").map(item => item.trim());
+   appData.income.push(prompt("Может, что-то ещё?", "").trim());
+   appData.income = appData.income.filter(item => item !== ""); // Убираем пустые строки
+
+   appData.income.forEach(function(item, i) {
+      let score = i + 1;
+      alert("Способы доп. заработка " + score + ": " + item);
+      
+   });
+},
 }
 console.log(appData);
-
+for (let key in appData) {
+   console.log("Наша программа включает в себя данные: " + key);
+}
 // appData.expenses.a1=a2;
 // appData.expenses.a3=a4;
 
